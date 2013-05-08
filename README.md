@@ -8,7 +8,7 @@ Usage
 
 Start the server 
 
-    ./HandbrakeQueue &
+    ./HandbrakeQueue.py &
 
 Schedule some commands
 
