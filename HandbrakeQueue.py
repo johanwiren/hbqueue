@@ -1,16 +1,29 @@
 #!/usr/bin/env python
 
 from command import Command
+from threading import Thread
 import BaseHTTPServer
 from httphandler import HttpHandler
+from Queue import Queue
 
 class HandbrakeQueue(object):
 
     def __init__(self):
         self.commands = []
+        self.q = Queue()
+        self.runner_thread = Thread(target=self.runner).start() 
+
+    def runner(self):
+        while True:
+            command = self.q.get()
+            command.start()
+            command.join()
 
     def add(self, args):
-        self.commands.append(Command(args))
+        command = Command(args)
+        self.commands.append(command)
+        self.q.put(command)
+        return command
 
     def run_server(self):
         self.httpserver = HttpServer(('', 8000), HttpHandler, self)

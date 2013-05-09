@@ -9,7 +9,19 @@ class Command(threading.Thread):
         self.stdout = ''
         self.args = args
         self.process = None
-        self.start()
+        #self.start()
+
+    def pause(self):
+        self.process.send_signal(19)
+
+    def resume(self):
+        self.process.send_signal(18)
+
+    def terminate(self):
+        self.process.terminate()
+
+    def kill(self):
+        self.process.kill()
 
     def run(self):
         self.process = subprocess.Popen(
