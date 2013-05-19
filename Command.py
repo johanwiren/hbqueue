@@ -1,15 +1,18 @@
+import distutils.spawn 
+import os.path
 import subprocess
-import threading
 
-class Command(threading.Thread):
+class Command(object):
 
     def __init__(self, args):
 
-        threading.Thread.__init__(self)
+        self.status = "Queued"
         self.stdout = ''
+        if not os.path.isabs(args[0]):
+            abspath = distutils.spawn.find_executable(args[0])
+            args[0] = abspath
         self.args = args
         self.process = None
-        #self.start()
 
     def pause(self):
         self.process.send_signal(19)
@@ -23,7 +26,11 @@ class Command(threading.Thread):
     def kill(self):
         self.process.kill()
 
+    def wait(self):
+        self.process.wait()
+
     def run(self):
+        self.status = "Running"
         self.process = subprocess.Popen(
             self.args, 
             bufsize=1, 
@@ -33,6 +40,9 @@ class Command(threading.Thread):
         for line in iter(self.process.stdout.readline, ""):
             self.stdout += line
 
-        self.process.communicate()
+        self.process.wait()
+        if self.process.returncode == 0:
+            self.status = "Completed"
+        else:
+            self.status = "Failed"
 
-    

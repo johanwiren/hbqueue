@@ -6,15 +6,13 @@ function getDetails(id) {
 }
 
 $.getJSON('/jobs', function(data) {
-    var j=0
-    output="<table><th align='left'>Job</th><th>Is running</th>"
+    output="<table><th align='left'>Job</th><th>Status</th>"
     for (var i in data) {
         output+="<tr>"
-        output+="<td><a href=javascript:getDetails("+j+")>"
+        output+="<td><a href=javascript:getDetails("+i+")>"
         output+=data[i].command + "</a></td>"
-        output+="<td>" + data[i].alive + "</td>"
+        output+="<td>" + data[i].status + "</td>"
         output+="</tr>"
-        j++
     }
     output+="</table>"
     $(jobs).html(output);

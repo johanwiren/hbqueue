@@ -13,8 +13,8 @@ class HttpHandler(SimpleHTTPRequestHandler):
             s.end_headers()
             id = int(s.path.split('/')[2])
             result = dict()
-            result['command'] = " ".join(s.server.hbq.commands[id].args)
-            result['alive'] = s.server.hbq.commands[id].is_alive()
+            result['command'] = s.server.hbq.commands[id].args
+            result['status'] = s.server.hbq.commands[id].status
             result['stdout'] = s.server.hbq.commands[id].stdout
             s.wfile.write(json.dumps(result))
         elif joblist.match(s.path):
@@ -22,8 +22,8 @@ class HttpHandler(SimpleHTTPRequestHandler):
             s.send_header('Content-Type:', 'application/json')
             s.end_headers()
             result = dict()
-            for i, cmd in enumerate([[x.args, x.is_alive()] for x in s.server.hbq.commands]):
-                result[i] = dict(command=" ".join(cmd[0]), alive=cmd[1])
+            for i, cmd in enumerate([[x.args, x.status] for x in s.server.hbq.commands]):
+                result[i] = dict(command=" ".join(cmd[0]), status=cmd[1])
             s.wfile.write(json.dumps(result))
         else:
             SimpleHTTPRequestHandler.do_GET(s)
