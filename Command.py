@@ -35,7 +35,8 @@ class Command(object):
             self.args, 
             bufsize=1, 
             shell=False,
-            stdout=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,)
 
         for line in iter(self.process.stdout.readline, ""):
             self.stdout += line
