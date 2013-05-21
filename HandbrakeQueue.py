@@ -10,12 +10,13 @@ import os
 import sys
 import yaml
 
+TARGETDIR='targets'
+OUTPUTDIR='output'
+DONEDIR='done'
+
 class HandbrakeQueue(object):
 
     def __init__(self):
-        self.BASEDIR = ('targets')
-        self.OUTPUTDIR = ('output')
-        self.DONEDIR = ('done')
         self.httpserver = HttpServer(('', 8000), HttpHandler, self)
         self.files = []
         self.commands = []
@@ -25,9 +26,9 @@ class HandbrakeQueue(object):
                 Thread(target=self.scanner)]
         self.load_targets()
         self.create_target_dirs()
-        self.ensure_dir_exists(self.BASEDIR) 
-        self.ensure_dir_exists(self.OUTPUTDIR) 
-        self.ensure_dir_exists(self.DONEDIR) 
+        self.ensure_dir_exists(TARGETDIR) 
+        self.ensure_dir_exists(OUTPUTDIR) 
+        self.ensure_dir_exists(DONEDIR) 
 
     def ensure_dir_exists(self, directory):
         if ( os.path.exists(directory) and 
@@ -38,7 +39,7 @@ class HandbrakeQueue(object):
 
     def create_target_dirs(self):
         for target_dir in [ x['name'] for x in self.targets ]:
-            self.ensure_dir_exists('%s/%s' % (self.BASEDIR, target_dir))
+            self.ensure_dir_exists('%s/%s' % (TARGETDIR, target_dir))
 
     def load_targets(self):
         try:
@@ -83,7 +84,7 @@ class HandbrakeQueue(object):
     def scanner(self):
         while self.run_threads:
             for t in self.targets:
-                target_dir = '/'.join([self.BASEDIR, t['name']])
+                target_dir = '/'.join([TARGETDIR, t['name']])
                 for f in [ x for x in os.listdir(target_dir) 
                         if x not in self.files ]: 
 
@@ -94,7 +95,7 @@ class HandbrakeQueue(object):
                     if f.upper().endswith('.ISO'):
                         out = '.'.join(f.split('.')[:-1])
                     out = '.'.join([out, t['extension']])
-                    out_path = '/'.join([self.OUTPUTDIR, out])
+                    out_path = '/'.join([OUTPUTDIR, out])
                     if os.path.isfile(out_path):
                         continue
                     args = ['HandBrakeCLI']
