@@ -7,6 +7,7 @@ from threading import Thread
 from time import sleep
 import BaseHTTPServer
 import os
+import re
 import sys
 import yaml
 
@@ -82,6 +83,7 @@ class HandbrakeQueue(object):
             self.stop_server()
 
     def scanner(self):
+        re_3le = re.compile('.*\.\w{3}$')
         while self.run_threads:
             for t in self.targets:
                 target_dir = '/'.join([TARGETDIR, t['name']])
@@ -92,7 +94,7 @@ class HandbrakeQueue(object):
                     if f == '.DS_Store':
                         continue
                     self.files.append(f)
-                    if f.upper().endswith('.ISO'):
+                    if re_3le.match(f):
                         out = '.'.join(f.split('.')[:-1])
                     out = '.'.join([out, t['extension']])
                     out_path = '/'.join([OUTPUTDIR, out])
