@@ -30,6 +30,7 @@ class Command(object):
         self.process.wait()
 
     def run(self):
+        print "Starting command %s" % self.args
         self.status = "Running"
         self.process = subprocess.Popen(
             self.args, 
@@ -46,4 +47,4 @@ class Command(object):
             self.status = "Completed"
         else:
             self.status = "Failed"
-
+        print "Job %s status: %s" % (self.args, self.status)
