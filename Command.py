@@ -1,6 +1,7 @@
-import distutils.spawn 
+import distutils.spawn
 import os.path
 import subprocess
+
 
 class Command(object):
 
@@ -33,8 +34,8 @@ class Command(object):
         print "Starting command %s" % self.args
         self.status = "Running"
         self.process = subprocess.Popen(
-            self.args, 
-            bufsize=1, 
+            self.args,
+            bufsize=1,
             shell=False,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,)

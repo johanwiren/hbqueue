@@ -2,6 +2,7 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import json
 import re
 
+
 class HttpHandler(SimpleHTTPRequestHandler):
 
     def do_GET(s):
@@ -22,7 +23,8 @@ class HttpHandler(SimpleHTTPRequestHandler):
             s.send_header('Content-Type:', 'application/json')
             s.end_headers()
             result = dict()
-            for i, cmd in enumerate([[x.args, x.status] for x in s.server.hbq.commands]):
+            for i, cmd in enumerate([[x.args, x.status]
+                                    for x in s.server.hbq.commands]):
                 result[i] = dict(command=" ".join(cmd[0]), status=cmd[1])
             s.wfile.write(json.dumps(result))
         else:

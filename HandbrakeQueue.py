@@ -11,9 +11,10 @@ import re
 import sys
 import yaml
 
-TARGETDIR='targets'
-OUTPUTDIR='output'
-DONEDIR='done'
+TARGETDIR = 'targets'
+OUTPUTDIR = 'output'
+DONEDIR = 'done'
+
 
 class HandbrakeQueue(object):
 
@@ -23,23 +24,23 @@ class HandbrakeQueue(object):
         self.commands = []
         self.q = Queue()
         self.run_threads = True
-        self.threads = [Thread(target=self.runner), 
-                Thread(target=self.scanner)]
+        self.threads = [Thread(target=self.runner),
+                        Thread(target=self.scanner)]
         self.load_targets()
         self.create_target_dirs()
-        self.ensure_dir_exists(TARGETDIR) 
-        self.ensure_dir_exists(OUTPUTDIR) 
-        self.ensure_dir_exists(DONEDIR) 
+        self.ensure_dir_exists(TARGETDIR)
+        self.ensure_dir_exists(OUTPUTDIR)
+        self.ensure_dir_exists(DONEDIR)
 
     def ensure_dir_exists(self, directory):
-        if ( os.path.exists(directory) and 
-                os.path.isdir(directory) ):
-            pass 
+        if (os.path.exists(directory) and
+                os.path.isdir(directory)):
+            pass
         else:
             os.mkdir(directory)
 
     def create_target_dirs(self):
-        for target_dir in [ x['name'] for x in self.targets ]:
+        for target_dir in [x['name'] for x in self.targets]:
             self.ensure_dir_exists('%s/%s' % (TARGETDIR, target_dir))
 
     def load_targets(self):
@@ -87,8 +88,8 @@ class HandbrakeQueue(object):
         while self.run_threads:
             for t in self.targets:
                 target_dir = '/'.join([TARGETDIR, t['name']])
-                for f in [ x for x in os.listdir(target_dir) 
-                        if x not in self.files ]: 
+                for f in [x for x in os.listdir(target_dir)
+                          if x not in self.files]:
 
                     f_path = '/'.join([target_dir, f])
                     if f == '.DS_Store':
@@ -111,6 +112,7 @@ class HandbrakeQueue(object):
                 self.create_target_dirs()
             sleep(1)
 
+
 class HttpServer(BaseHTTPServer.HTTPServer):
 
     def __init__(self, address, handler, hbq):
@@ -119,6 +121,3 @@ class HttpServer(BaseHTTPServer.HTTPServer):
 
 if __name__ == "__main__":
     HandbrakeQueue().run_server()
-    
-
-        
