@@ -1,7 +1,11 @@
 from SimpleHTTPServer import SimpleHTTPRequestHandler
-from guppy import hpy
+try:
+    from guppy import hpy
+except:
+    pass
 import json
 import re
+import sys
 
 
 class HttpHandler(SimpleHTTPRequestHandler):
@@ -9,7 +13,7 @@ class HttpHandler(SimpleHTTPRequestHandler):
     def do_GET(s):
         job = re.compile('^/jobs/[0-9]+$')
         joblist = re.compile('^/jobs/?$')
-        if s.path == '/stats/heap':
+        if (s.path == '/stats/heap' and 'guppy' in sys.modules):
             s.send_response(200)
             s.send_header('Content-Type:', 'text/plain')
             s.end_headers()
