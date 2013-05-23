@@ -1,4 +1,5 @@
 from SimpleHTTPServer import SimpleHTTPRequestHandler
+from guppy import hpy
 import json
 import re
 
@@ -8,7 +9,12 @@ class HttpHandler(SimpleHTTPRequestHandler):
     def do_GET(s):
         job = re.compile('^/jobs/[0-9]+$')
         joblist = re.compile('^/jobs/?$')
-        if job.match(s.path):
+        if s.path == '/stats/heap':
+            s.send_response(200)
+            s.send_header('Content-Type:', 'text/plain')
+            s.end_headers()
+            s.wfile.write(hpy().heap())
+        elif job.match(s.path):
             s.send_response(200)
             s.send_header('Content-Type:', 'application/json')
             s.end_headers()
