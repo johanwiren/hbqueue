@@ -22,16 +22,16 @@ table
 table th
 {
 	padding: 12px 17px 12px 17px;
-	font-weight: normal;
-	font-size: 14px;
+	font-weight: bold;
+	font-size: 18px;
 	color: #039;
-	border-bottom: 1px dashed #69c;
+	border-bottom: 1px solid #69c;
 }
 
 table td
 {
-	padding: 7px 17px 7px 17px;
-	color: #669;
+	padding: 1px 17px 1px 17px;
+	color: #039;
 }
 
 table tbody tr:hover td
