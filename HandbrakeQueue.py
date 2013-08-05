@@ -95,6 +95,7 @@ class HandbrakeQueue(object):
                     if f == '.DS_Store':
                         continue
                     self.files.append(f)
+                    out = f
                     if re_3le.match(f):
                         out = '.'.join(f.split('.')[:-1])
                     out = '.'.join([out, t['extension']])
@@ -120,4 +121,7 @@ class HttpServer(BaseHTTPServer.HTTPServer):
         BaseHTTPServer.HTTPServer.__init__(self, address, handler)
 
 if __name__ == "__main__":
-    HandbrakeQueue().run_server()
+    pid = os.fork()
+    if not pid:
+        HandbrakeQueue().run_server()
+
