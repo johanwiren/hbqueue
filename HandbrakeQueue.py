@@ -26,11 +26,11 @@ class HandbrakeQueue(object):
         self.run_threads = True
         self.threads = [Thread(target=self.runner),
                         Thread(target=self.scanner)]
-        self.load_targets()
-        self.create_target_dirs()
         self.ensure_dir_exists(TARGETDIR)
         self.ensure_dir_exists(OUTPUTDIR)
         self.ensure_dir_exists(DONEDIR)
+        self.load_targets()
+        self.create_target_dirs()
 
     def ensure_dir_exists(self, directory):
         if (os.path.exists(directory) and
