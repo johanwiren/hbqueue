@@ -95,18 +95,22 @@ class HandbrakeQueue(object):
                     if f == '.DS_Store':
                         continue
                     self.files.append(f)
+                    print "Handling file %s" % f
                     out = f
                     if re_3le.match(f):
                         out = '.'.join(f.split('.')[:-1])
                     out = '.'.join([out, t['extension']])
                     out_path = '/'.join([OUTPUTDIR, out])
                     if os.path.isfile(out_path):
+                        print "File %s already present in %s" % (out_path, OUTPUTDIR)
                         continue
                     args = ['HandBrakeCLI']
                     args.extend(['-i', f_path])
                     args.extend(t['args'].split())
                     args.extend(['-o', out_path])
+                    print "Adding command: %s" % str(args)
                     self.add(args)
+                    
             if os.stat('targets.yml').st_mtime > self.targets_timestamp:
                 print 'Reloading targets'
                 self.load_targets()
